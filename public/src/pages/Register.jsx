@@ -24,6 +24,12 @@ function Register() {
     theme:"dark",
 }
 
+useEffect(()=>{
+    if(localStorage.getItem('chat-app-user')){
+        navigate('/');
+    }
+},[]);
+
   const handleSubmit = async(e) =>{
       e.preventDefault();
       handleValidation();
@@ -37,8 +43,8 @@ function Register() {
         }
         if (data.status===true){
             localStorage.setItem('chat-app-user', JSON.stringify(data.user));
+            navigate("/");
         }
-        navigate("/");
       }
   };
 
