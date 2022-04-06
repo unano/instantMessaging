@@ -39,10 +39,13 @@ function Login() {
         if (data.status===false){
             toast.error(data.msg, toastOptions);
         }
-        if (data.status===true){
-            localStorage.setItem('chat-app-user', JSON.stringify(data.user));
+        if (data.status === true) {
+            localStorage.setItem(
+              'chat-app-user',
+              JSON.stringify(data.user)
+            );
             navigate("/");
-        }
+          }
       }
   };
 
