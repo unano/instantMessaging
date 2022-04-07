@@ -9,25 +9,27 @@ import ChatContainer from "../components/ChatContainer";
 import {io} from "socket.io-client";
 
 function Chat() {
-  const socket = useRef();
+    const socket = useRef();
     const navigate = useNavigate();
     const [contacts, setContacts] = useState([]);
     const [currentUser, setCurrentUser] = useState(undefined);
     const [currentChat, setCurrentChat] = useState(undefined);
     const [isLoaded, setIsLoaded] = useState(false);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect (async() => {
-            if (!localStorage.getItem("chat-app-user")) {
-                navigate("/login");
-              } else {
-                setCurrentUser(
-                  await JSON.parse(
-                    localStorage.getItem("chat-app-user")
-                  )
-                );
-                setIsLoaded(true);
-              }
+    useEffect (() => {
+      async function fetchData() {
+        if (!localStorage.getItem("chat-app-user")) {
+          navigate("/login");
+        } else {
+          setCurrentUser(
+            await JSON.parse(
+              localStorage.getItem("chat-app-user")
+            )
+          );
+          setIsLoaded(true);
+        }
+      }
+      fetchData();
       }, []);
 
       useEffect(() => {
@@ -85,11 +87,14 @@ const Container = styled.div`
   justify-content: center;
   gap: 1rem;
   align-items: center;
-  background-color: #131324;
+  background-image: linear-gradient(45deg, #0066ff, #ff0088);
   .container {
     height: 85vh;
     width: 85vw;
-    background-color: #00000076;
+    background-color: white;
+    border-radius: 10px;
+    overflow:hidden;
+    box-shadow: 0 0 10px 2px gray;
     display: grid;
     grid-template-columns: 25% 75%;
     @media screen and (min-width: 720px) and (max-width: 1080px) {

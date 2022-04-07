@@ -15,11 +15,11 @@ function Login() {
         "password":"",
     });
   const toastOptions = {
-    position:"bottom-right",
-    autoClose:8000,
+    position:"top-right",
+    autoClose:4000,
     pauseOnHover:true,
     draggable:true,
-    theme:"dark",
+    theme:"light",
 }
 
   useEffect(()=>{
@@ -37,7 +37,7 @@ function Login() {
             username, password,
         }); 
         if (data.status===false){
-            toast.error(data.msg, toastOptions);
+            toast.info(data.msg, toastOptions);
         }
         if (data.status === true) {
             localStorage.setItem(
@@ -58,11 +58,11 @@ function Login() {
   const handleValidation = () =>{
       const { password, username} = values;
       if(password === ""){
-        toast.error("Email and password is required.",toastOptions);
+        toast.info("Email and password is required.",toastOptions);
         return false;
       }
       else if (username.length === ""){
-            toast.error("Email and password is required.",toastOptions);
+            toast.info("Email and password is required.",toastOptions);
             return false;
           }
           return true;
@@ -75,13 +75,13 @@ function Login() {
         <FormContainer>
             <form onSubmit={(e) => {handleSubmit(e)}}>
                 <div className="brand">
-                    <img src={Logo} alt="" />
-                    <h1>snappy</h1>
+                    {/* <img src={Logo} alt="" /> */}
+                    <h1>Vchat</h1>
                 </div>
                 <input type="text" placeholder="Username" name="username" onChange={(e) =>handleChange(e)} min="3"/>
                 <input type="password" placeholder="password" name="password" onChange={(e) =>handleChange(e)}/>
-                <button type="submit">Log In</button>
-                <span>Don't have an account? <Link to="/register">Register</Link></span>
+                <button type="submit">Login</button>
+                <span>Don't have an account? Please <Link to="/register">Register</Link></span>
             </form>
         </FormContainer>
         <ToastContainer/>
@@ -97,7 +97,7 @@ const FormContainer = styled.div`
   justify-content: center;
   gap: 1rem;
   align-items: center;
-  background-color: #131324;
+  background-image: linear-gradient(45deg, #0066ff, #ff0088);
   .brand {
     display: flex;
     align-items: center;
@@ -107,8 +107,9 @@ const FormContainer = styled.div`
       height: 5rem;
     }
     h1 {
-      color: white;
+      color: #0066ff;
       text-transform: uppercase;
+      font-size: 50px;
     }
   }
 
@@ -116,42 +117,45 @@ const FormContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    background-color: #00000076;
-    border-radius: 2rem;
-    padding: 3rem 5rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 5rem 3rem;
+    box-shadow 0px 0px 8px gray;
+    padding-top:2rem;
   }
   input {
     background-color: transparent;
     padding: 1rem;
-    border: 0.1rem solid #4e0eff;
-    border-radius: 0.4rem;
-    color: white;
+    border: 0.1rem solid silver;
+    border-radius: 0.2rem;
+    color: black;
     width: 100%;
     font-size: 1rem;
     &:focus {
-      border: 0.1rem solid #997af0;
+      border: 0.1rem solid black;
       outline: none;
     }
   }
   button {
-    background-color: #4e0eff;
-    color: white;
+    background-color: white;
+    color: #ff0088;
     padding: 1rem 2rem;
-    border: none;
+    border: 0.1rem solid #ff0088;
     font-weight: bold;
     cursor: pointer;
     border-radius: 0.4rem;
     font-size: 1rem;
     text-transform: uppercase;
+    transition: all 0.5s;
     &:hover {
-      background-color: #4e0eff;
+      background-color: #ff0088;
+      color: white;
     }
   }
   span {
-    color: white;
-    text-transform: uppercase;
+    color: black;
     a {
-      color: #4e0eff;
+      color: #0066ff;
       text-decoration: none;
       font-weight: bold;
     }

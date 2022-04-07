@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Logo from "../assets/logo.svg";
-
+import Logout from "../components/Logout";
 
 export default function Contacts({ contacts, currentUser, changeChat }) {
 
@@ -26,8 +26,8 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
         {currentUserImage && currentUserName && (
           <Container>
             <div className="brand">
-              <img src={Logo} alt="logo" />
-              <h3>snappy</h3>
+              {/* <img src={Logo} alt="logo" /> */}
+              <h3>Chats</h3>
             </div>
             <div className="contacts">
               {contacts.map((contact, index) => {
@@ -44,12 +44,13 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
                       />
                     </div>
                     <div className="username">
-                      <h3>{contact.username}</h3>
+                      <div>{contact.username}</div>
                     </div>
                   </div>
                 );
               })}
             </div>
+            
             <div className="current-user">
               <div className="avatar">
                 <img
@@ -70,7 +71,7 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
     display: grid;
     grid-template-rows: 10% 75% 15%;
     overflow: hidden;
-    background-color: #080420;
+    background-color: #ebe9f0;
     .brand {
       display: flex;
       align-items: center;
@@ -80,14 +81,15 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
         height: 2rem;
       }
       h3 {
-        color: white;
-        text-transform: uppercase;
+        color: black;
+        font-size:30px;
       }
     }
     .contacts {
       display: flex;
       flex-direction: column;
       align-items: center;
+      padding-top:8px;
       overflow: auto;
       gap: 0.8rem;
       &::-webkit-scrollbar {
@@ -99,11 +101,12 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
         }
       }
       .contact {
-        background-color: #ffffff34;
+        background-color: white;
+        box-shadow: 0 0 6px #e2e2e2;
         min-height: 5rem;
         cursor: pointer;
         width: 90%;
-        border-radius: 0.2rem;
+        border-radius: 0.7rem;
         padding: 0.4rem;
         display: flex;
         gap: 1rem;
@@ -115,13 +118,18 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
           }
         }
         .username {
-          h3 {
-            color: white;
+          div {
+            color: black;
           }
         }
       }
       .selected {
-        background-color: #9a86f3;
+        background-color: #211b42;
+        .username {
+          div {
+            color: white;
+          }
+        }
       }
     }
     .current-user {

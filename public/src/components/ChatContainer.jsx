@@ -2,10 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
-import Logout from "./Logout";
 import ChatInput from "./ChatInput";
 import { sendMessageRoute, getAllMessageRoute } from "../utils/APIRoutes";
-
+import Logout from "../components/Logout";
 
 export default function ChatContainer({ currentChat, currentUser, socket}) {
   const [messages, setMessages] = useState([]);
@@ -13,7 +12,7 @@ export default function ChatContainer({ currentChat, currentUser, socket}) {
   const scrollRef = useRef();
 
   useEffect(() =>{
-    async function fetchData() {
+    async function upodateMsg() {
       if(currentChat){ 
         const response = await axios.post(getAllMessageRoute,{
             from: currentUser._id,
@@ -22,7 +21,7 @@ export default function ChatContainer({ currentChat, currentUser, socket}) {
     setMessages(response.data);
       }
     }
-    fetchData();
+    upodateMsg();
 },[currentChat]);
 
   const handleSendMsg = async (msg) => {
@@ -82,11 +81,17 @@ export default function ChatContainer({ currentChat, currentUser, socket}) {
             <div ref={scrollRef} key={uuidv4()}>
               <div className={`message ${message.fromSelf ? "sended" : "recieved"}`}
               >
-                <div className="content ">
-                  <p>{message.message}</p>
+                <div className="content">
+                  <div>{message.message}</div>
                 </div>
+                {/* <div>{message.time}</div> */}
+                </div>
+                {message.time? 
+                <div className={`message ${message.fromSelf ? "sended2" : "recieved2"}`}
+              >
+               <div className="time">{message.time.split("-")[1]+"."+message.time.split("-")[2].slice(0,2)+" "+ message.time.split(":")[0].slice(-2) +":"+message.time.split(":")[1]}</div>
+              </div>:<></>}
               </div>
-            </div>
           );
         })}
       </div>
@@ -101,6 +106,7 @@ const Container = styled.div`
   grid-template-rows: 10% 80% 10%;
   gap: 0.1rem;
   overflow: hidden;
+  background-color: white;
   @media screen and (min-width: 720px) and (max-width: 1080px) {
     grid-template-rows: 15% 70% 15%;
   }
@@ -108,7 +114,8 @@ const Container = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 2rem;
+    padding-left: 2rem;
+    padding-right:1rem;
     .user-details {
       display: flex;
       align-items: center;
@@ -120,7 +127,7 @@ const Container = styled.div`
       }
       .username {
         h3 {
-          color: white;
+          color: black;
         }
       }
     }
@@ -142,26 +149,57 @@ const Container = styled.div`
     .message {
       display: flex;
       align-items: center;
-      .content {
-        max-width: 40%;
-        overflow-wrap: break-word;
-        padding: 1rem;
-        font-size: 1.1rem;
-        border-radius: 1rem;
-        color: #d1d1d1;
-        @media screen and (min-width: 720px) and (max-width: 1080px) {
-          max-width: 70%;
+      width:100%;
+      height:100%;
+        .content {
+          max-width: 100%;
+          overflow-wrap: break-word;
+          padding: 1rem;
+          font-size: 1.1rem;
+          border-radius: 1rem;
+          color: black;
+          @media screen and (min-width: 720px) and (max-width: 1080px) {
+            max-width: 70%;
+          }
         }
-      }
+        .time{
+          font-size:15px;
+          display:table-row-group;
+        }
     }
     .sended {
       justify-content: flex-end;
       .content {
-        background-color: #4f04ff21;
+        background-color: #5ba5ff;
+        color:white;
+        border-radius: 1rem 0rem 1rem 1rem;
+        display:table-row-group;
       }
     }
     .recieved {
       justify-content: flex-start;
+      .content {
+        border-radius: 1rem 1rem 1rem 0rem;
+        background-color: #9900ff20;
+      }
+    }
+
+    .sended2 {
+      justify-content: flex-end;
+      height:20px;
+      margin-top:-5px;
+      padding-right:10px;
+      .content {
+        background-color: #5ba5ff;
+        color:white;
+        display:table-row-group;
+      }
+    }
+    .recieved2 {
+      justify-content: flex-start;
+      height:20px;
+      margin-top:-5px;
+      padding-left:10px;
       .content {
         background-color: #9900ff20;
       }

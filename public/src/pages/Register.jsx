@@ -16,13 +16,13 @@ function Register() {
         "password":"",
         "confirmPassword":"",
     });
-  const toastOptions = {
-    position:"bottom-right",
-    autoClose:8000,
-    pauseOnHover:true,
-    draggable:true,
-    theme:"dark",
-}
+    const toastOptions = {
+      position:"top-right",
+      autoClose:4000,
+      pauseOnHover:true,
+      draggable:true,
+      theme:"light",
+  }
 
 useEffect(()=>{
     if(localStorage.getItem('chat-app-user')){
@@ -39,7 +39,7 @@ useEffect(()=>{
             username,email, password,
         }); 
         if (data.status===false){
-            toast.error(data.msg, toastOptions);
+            toast.info(data.msg, toastOptions);
         }
         if (data.status===true){
             localStorage.setItem('chat-app-user', JSON.stringify(data.user));
@@ -57,28 +57,28 @@ useEffect(()=>{
   const handleValidation = () =>{
       const { password, confirmPassword, username, email} = values;
       if(password !== confirmPassword){
-        toast.error("password and confirm password should be same.",toastOptions);
+        toast.info("password and confirm password should be same.",toastOptions);
         return false;
       }
       else if (username.length<3){
-            toast.error("username should be greater than 3 characters.",
+            toast.info("username should be greater than 3 characters.",
             toastOptions
             );
             return false;
           }
           else if (password.length<8){
-            toast.error("password should be greater than 8 characters.",
+            toast.info("password should be greater than 8 characters.",
             toastOptions
             );
             return false;
           }
           else if (username.length<3){
-            toast.error("username should be greater than 3 characters.",
+            toast.info("username should be greater than 3 characters.",
             toastOptions
             );
           }
           else if (email===""){
-            toast.error("email is required.",
+            toast.info("email is required.",
             toastOptions
             );
             return false;
@@ -93,15 +93,15 @@ useEffect(()=>{
         <FormContainer>
             <form onSubmit={(e) => {handleSubmit(e)}}>
                 <div className="brand">
-                    <img src={Logo} alt="" />
-                    <h1>snappy</h1>
+                    {/* <img src={Logo} alt="" /> */}
+                    <h1>Vchat</h1>
                 </div>
                 <input type="text" placeholder="Username" name="username" onChange={(e) =>handleChange(e)}/>
                 <input type="email" placeholder="email" name="email" onChange={(e) =>handleChange(e)}/>
                 <input type="password" placeholder="password" name="password" onChange={(e) =>handleChange(e)}/>
                 <input type="password" placeholder="Confirm Password" name="confirmPassword" onChange={(e) =>handleChange(e)}/>
-                <button type="submit">Create User</button>
-                <span>Already have an account? <Link to="/login">Login</Link></span>
+                <button type="submit">Register</button>
+                <span>Already have an account? Please <Link to="/login">Login</Link></span>
             </form>
         </FormContainer>
         <ToastContainer/>
@@ -110,14 +110,14 @@ useEffect(()=>{
 }
 
 const FormContainer = styled.div`
-  height: 100vh;
+height: 100vh;
   width: 100vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 1rem;
   align-items: center;
-  background-color: #131324;
+  background-image: linear-gradient(45deg, #0066ff, #ff0088);
   .brand {
     display: flex;
     align-items: center;
@@ -127,51 +127,55 @@ const FormContainer = styled.div`
       height: 5rem;
     }
     h1 {
-      color: white;
+      color: #0066ff;
       text-transform: uppercase;
+      font-size: 50px;
     }
   }
 
   form {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    background-color: #00000076;
-    border-radius: 2rem;
-    padding: 3rem 5rem;
+    gap: 1rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 5rem 3rem;
+    box-shadow 0px 0px 8px gray;
+    padding-top:2rem;
   }
   input {
     background-color: transparent;
     padding: 1rem;
-    border: 0.1rem solid #4e0eff;
-    border-radius: 0.4rem;
-    color: white;
+    border: 0.1rem solid silver;
+    border-radius: 0.2rem;
+    color: black;
     width: 100%;
     font-size: 1rem;
     &:focus {
-      border: 0.1rem solid #997af0;
+      border: 0.1rem solid black;
       outline: none;
     }
   }
   button {
-    background-color: #4e0eff;
-    color: white;
+    background-color: white;
+    color: #ff0088;
     padding: 1rem 2rem;
-    border: none;
+    border: 0.1rem solid #ff0088;
     font-weight: bold;
     cursor: pointer;
     border-radius: 0.4rem;
     font-size: 1rem;
     text-transform: uppercase;
+    transition: all 0.5s;
     &:hover {
-      background-color: #4e0eff;
+      background-color: #ff0088;
+      color: white;
     }
   }
   span {
-    color: white;
-    text-transform: uppercase;
+    color: black;
     a {
-      color: #4e0eff;
+      color: #0066ff;
       text-decoration: none;
       font-weight: bold;
     }

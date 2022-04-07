@@ -16,23 +16,25 @@ export default function SetAvatar() {
     const [isLoading, setIsLoading] =useState(true);
     const [selectedAvatar, setSelectedAvatar] = useState(undefined);
     const toastOptions = {
-        position:"bottom-right",
-        autoClose:8000,
-        pauseOnHover:true,
-        draggable:true,
-        theme:"dark",
-    };
+      position:"top-right",
+      autoClose:4000,
+      pauseOnHover:true,
+      draggable:true,
+      theme:"light",
+  }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(async () => {
+    useEffect(() => {
+      async function nav() {
         if (!localStorage.getItem("chat-app-user"))
           navigate("/login");
+      }
+      nav();
       }, []);
     
 
     const setProfilePicture = async () => {
         if (selectedAvatar === undefined) {
-          toast.error("Please select an avatar", toastOptions);
+          toast.info("Please select an avatar", toastOptions);
         } else {
           const user = await JSON.parse(
             localStorage.getItem("chat-app-user")
@@ -51,7 +53,7 @@ export default function SetAvatar() {
             );
             navigate("/");
           } else {
-            toast.error("Error setting avatar. Please try again.", toastOptions);
+            toast.info("Error setting avatar. Please try again.", toastOptions);
           }
         }
       };
@@ -74,7 +76,9 @@ export default function SetAvatar() {
     <>
     {isLoading ? (
         <Container>
-          <img src={loader} alt="loader" className="loader" />
+          <Loader>
+          <div className="loader">Loading...</div>
+          </Loader>
         </Container>
       ) : (
           <>
@@ -119,7 +123,7 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   gap: 3rem;
-  background-color: #131324;
+  background-image: linear-gradient(45deg, #0066ff, #ff0088);
   height: 100vh;
   width: 100vw;
   .loader {
@@ -127,7 +131,7 @@ const Container = styled.div`
   }
   .title-container {
     h1 {
-      color: white;
+      color: black;
     }
   }
   .avatars {
@@ -147,21 +151,68 @@ const Container = styled.div`
       }
     }
     .selected {
-      border: 0.4rem solid #4e0eff;
+      border: 0.4rem solid #5ba5ff;
     }
   }
   .submit-btn {
-    background-color: #4e0eff;
-    color: white;
+    color: #5ba5ff;
+    border: 0.1rem solid #5ba5ff;
     padding: 1rem 2rem;
-    border: none;
     font-weight: bold;
     cursor: pointer;
     border-radius: 0.4rem;
     font-size: 1rem;
     text-transform: uppercase;
+    background-color: white;
+    transition: all 0.5s;
     &:hover {
-      background-color: #4e0eff;
+      background-color: #5ba5ff;
+      color: white;
     }
   }
 `;
+
+const Loader = styled.div`
+.loader,
+.loader:after {
+  border-radius: 50%;
+  width: 16em;
+  height: 16em;
+}
+.loader {
+  margin: 60px auto;
+  font-size: 10px;
+  position: relative;
+  text-indent: -9999em;
+  border-top: 1em solid #b6b6b6b9;
+  border-right: 1em solid #b6b6b6b9;
+  border-bottom: 1em solid #b6b6b6b9;
+  border-left: 1em solid #5ba5ff;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: load8 1.1s infinite linear;
+  animation: load8 1.1s infinite linear;
+}
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+
+`;
+
