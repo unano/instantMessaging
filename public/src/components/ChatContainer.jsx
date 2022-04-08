@@ -89,7 +89,8 @@ export default function ChatContainer({ currentChat, currentUser, socket}) {
                 {message.time? 
                 <div className={`message ${message.fromSelf ? "sended2" : "recieved2"}`}
               >
-               <div className="time">{message.time.split("-")[1]+"."+message.time.split("-")[2].slice(0,2)+" "+ message.time.split(":")[0].slice(-2) +":"+message.time.split(":")[1]}</div>
+                {/* message.time.split("-")[1]+"."+message.time.split("-")[2].slice(0,2)+" "+ */}
+               <div className="time">{message.time.split(":")[0].slice(-2) +":"+message.time.split(":")[1]}</div>
               </div>:<></>}
               </div>
           );

@@ -104,6 +104,8 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
     grid-template-rows: 10% 75% 15%;
     overflow: hidden;
     background-color: #ebe9f0;
+    box-shadow: 2px 0 8px silver;
+    z-index:5;
     .brand {
       display: flex;
       align-items: center;
@@ -204,7 +206,8 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
       }
     }
     .current-user {
-      background-color: #0d0d30;
+      background-color: white;
+      box-shadow: 0 0 8px silver;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -217,7 +220,7 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
       }
       .username {
         h2 {
-          color: white;
+          color: black;
         }
       }
       @media screen and (min-width: 720px) and (max-width: 1080px) {
