@@ -3,35 +3,36 @@ import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import ChatInput from "./ChatInput";
-import { sendMessageRoute, getAllMessageRoute } from "../utils/APIRoutes";
+import { sendPublicMessageRoute, getAllPublicMessageRoute } from "../utils/APIRoutes";
 import Logout from "../components/Logout";
 
-export default function ChatContainer({ currentChat, currentUser, socket}) {
+export default function ChatContainer({ currentChannel, currentUser, socket}) {
   const [messages, setMessages] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const scrollRef = useRef();
 
+
   useEffect(() =>{
     async function updateMsg() {
-      if(currentChat){ 
-        const response = await axios.post(getAllMessageRoute,{
+      if(currentChannel){ 
+        const response = await axios.post(getAllPublicMessageRoute,{
             from: currentUser._id,
-            to:currentChat._id,
+            room: currentChannel.channel
     });
     setMessages(response.data);
       }
     }
     updateMsg();
-},[currentChat]);
+},[currentChannel]);
 
   const handleSendMsg = async (msg) => {
-      await axios.post(sendMessageRoute,{
+      await axios.post(sendPublicMessageRoute,{
           from:currentUser._id,
-          to:currentChat._id,
+          room: currentChannel.channel,
           message:msg
       });
-      socket.current.emit("send-msg", {
-        to: currentChat._id,
+      socket.current.emit("send-global", {
+        room: currentChannel._id,
         from: currentUser._id,
         message: msg,
       });
@@ -41,13 +42,20 @@ export default function ChatContainer({ currentChat, currentUser, socket}) {
       setMessages(msgs);
   };
 
+
   useEffect(() => {
+    console.log(socket)
+    console.log("asdsss")
     if (socket.current) {
-      socket.current.on("msg-recieve", (msg) => {
+      console.log("refreshed")
+      console.log(socket.current)
+      socket.current.on("receieve-msg", (msg) => {
+        console.log("1111111111")
+        console.log(msg);
         setArrivalMessage({ fromSelf: false, message: msg });
       });
     }
-  }, []);
+  }, [socket,messages]);
 
   useEffect(() => {
     arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
@@ -59,18 +67,14 @@ export default function ChatContainer({ currentChat, currentUser, socket}) {
 
 
   return (
-      currentChat && (
+    currentChannel && (
     <Container>
       <div className="chat-header">
         <div className="user-details">
           <div className="avatar">
-            <img
-              src={`data:image/svg+xml;base64,${currentChat.avatarImage}`}
-              alt=""
-            />
           </div>
           <div className="username">
-            <h3>{currentChat.username}</h3>
+            <h3>Public Channel {currentChannel.channel}</h3>
           </div>
         </div>
         <Logout />

@@ -3,12 +3,13 @@ import styled from "styled-components";
 import Logo from "../assets/logo.svg";
 import Logout from "../components/Logout";
 
-export default function Contacts({ contacts, currentUser, changeChat }) {
+export default function Contacts({ contacts, channels, currentUser, changeChat, changeChannel, chatORChannel }) {
 
 
     const [currentUserName, setCurrentUserName] = useState(undefined);
     const [currentUserImage, setCurrentUserImage] = useState(undefined);
     const [currentSelected, setCurrentSelected] = useState(undefined);
+    const [currentSelected2, setCurrentSelected2] = useState(undefined);
 
     useEffect(() => {
       if(currentUser){
@@ -20,6 +21,13 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
     const changeCurrentChat = (index, contact) => {
       setCurrentSelected(index);
       changeChat(contact);
+      chatORChannel(true);
+    };
+
+    const changeCurrentChannel = (index, contact) => {
+      setCurrentSelected2(index);
+      changeChannel(contact);
+      chatORChannel(false);
     };
     return (
       <>
@@ -30,6 +38,11 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
               <h3>Chats</h3>
             </div>
             <div className="contacts">
+            {channels.map((channel, index) => {
+            return(<div 
+            className={`contact ${index === currentSelected2 ? "selected" : ""}`}
+            onClick={() => changeCurrentChannel(index, channel)}>
+              <div className="public">P</div>Public Cannel {channel.channel}</div>)})};
               {contacts.map((contact, index) => {
                 return (
                   <div
@@ -101,6 +114,7 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
         }
       }
       .contact {
+        color:black;
         background-color: white;
         box-shadow: 0 0 6px #e2e2e2;
         min-height: 5rem;
@@ -112,6 +126,14 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
         gap: 1rem;
         align-items: center;
         transition: 0.5s ease-in-out;
+        .public{
+          width:3rem;
+          height: 3rem;
+          border: 0.1rem solid black;
+          border-radius: 3rem;
+          text-align: center;
+          line-height:3rem;
+        }
         .avatar {
           img {
             height: 3rem;
@@ -125,6 +147,15 @@ export default function Contacts({ contacts, currentUser, changeChat }) {
       }
       .selected {
         background-color: #211b42;
+        color:white;
+        .public{
+          width:3rem;
+          height: 3rem;
+          border: 0.1rem solid white;
+          border-radius: 3rem;
+          text-align: center;
+          line-height:3rem;
+        }
         .username {
           div {
             color: white;

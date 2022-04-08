@@ -3,6 +3,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const userRoutes = require("./routes/userRoutes");
 const messageRoute = require("./routes/messagesRoute");
+const publicMessageRoute = require("./routes/publicMessagesRoute");
+const channelRoute = require("./routes/channelRoute");
 const socket = require("socket.io");
 const app = express();
 
@@ -12,7 +14,9 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", userRoutes);
+app.use("/api/channel", channelRoute);
 app.use("/api/messages", messageRoute);
+app.use("/api/publicMessages", publicMessageRoute);
 
 mongoose.connect(process.env.MONGO_URL,{
          useNewUrlParser: true,
@@ -39,15 +43,29 @@ const io = socket(server,{
 global.onlineUsers = new Map();
 
 io.on("connection", (socket)=>{
-    global.chatSocket = socket;
+    // global.chatSocket = socket;
+
     socket.on("add-user",(userId)=>{
         onlineUsers.set(userId, socket.id);
     });
 
     socket.on("send-msg", (data) =>{
         const sendUserSocket = onlineUsers.get(data.to);
+
+        console.log(data.to)
+        console.log(sendUserSocket)
         if(sendUserSocket){
-            socket.to(sendUserSocket).emit("msg-recieve", data.message);
+            io.to(sendUserSocket).emit("msg-recieve", data.message);
         }
+    })
+
+    socket.on("join-room", (data) =>{
+        socket.join(data);
+        console.log(`User with ID: ${socket.id} joined room: ${data}`);
+    })
+    
+    socket.on("send-global", (data)=>{
+            io.to(data.room).emit("recieve-msg", data.message);
+            console.log(data)
     })
 });
