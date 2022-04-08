@@ -38,19 +38,10 @@ function Chat() {
 
       useEffect(() => {
         if (currentUser) {
-          console.log("chat")
           socket.current = io(host);
           socket.current.emit("add-user", currentUser._id);
         }
       }, [currentUser]);
-
-      useEffect(() => {
-        if (currentChannel) {
-          console.log("channel")
-          socket.current = io(host);
-          socket.current.emit("join-room", currentChannel._id);
-        }
-      }, [currentChannel, socket]);
 
 
       useEffect(() => {
@@ -80,7 +71,11 @@ function Chat() {
       };
 
       const handleChatChannel = (channel) => {
+        console.log("ffff")
         setCurrentChannel(channel);
+        socket.current = io(host);
+        socket.current.emit("join-room", channel._id);
+        console.log("ffff")
       };
   return (
     <Container>

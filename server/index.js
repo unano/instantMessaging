@@ -51,9 +51,6 @@ io.on("connection", (socket)=>{
 
     socket.on("send-msg", (data) =>{
         const sendUserSocket = onlineUsers.get(data.to);
-
-        console.log(data.to)
-        console.log(sendUserSocket)
         if(sendUserSocket){
             io.to(sendUserSocket).emit("msg-recieve", data.message);
         }
@@ -65,7 +62,7 @@ io.on("connection", (socket)=>{
     })
     
     socket.on("send-global", (data)=>{
-            socket.to(data.room).emit("recieve-msg", data.message);
+            socket.to(data.room).emit("msg-recieve2", data.message);
             console.log(data)
     })
 });

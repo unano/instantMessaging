@@ -3,13 +3,21 @@ import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import ChatInput from "./ChatInput";
-import { sendPublicMessageRoute, getAllPublicMessageRoute } from "../utils/APIRoutes";
+import { sendPublicMessageRoute, host , getAllPublicMessageRoute } from "../utils/APIRoutes";
 import Logout from "../components/Logout";
+// import {io} from "socket.io-client";
 
 export default function ChatContainer({ currentChannel, currentUser, socket}) {
   const [messages, setMessages] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const scrollRef = useRef();
+
+  // useEffect(() => {
+  //   if (currentChannel) {
+  //     socket.current = io(host);
+  //     socket.current.emit("join-room", currentChannel._id);
+  //   }
+  // }, [currentChannel, socket]);
 
 
   useEffect(() =>{
@@ -44,17 +52,12 @@ export default function ChatContainer({ currentChannel, currentUser, socket}) {
 
 
   useEffect(() => {
-    console.log(socket)
-    console.log("asdsss")
     if (socket.current) {
-      console.log("refreshed")
-      console.log(socket.current)
-      socket.current.on("recieve-msg", (msg) => {
-        console.log(msg);
+      socket.current.on("msg-recieve2", (msg) => {
         setArrivalMessage({ fromSelf: false, message: msg });
       });
     }
-  }, [socket,messages]);
+  }, []);
 
   useEffect(() => {
     arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
