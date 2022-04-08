@@ -2,7 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { IoMdLogOut } from "react-icons/io";
 import styled from "styled-components";
-import axios from "axios";
 
 export default function Logout() {
   const navigate = useNavigate();

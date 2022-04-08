@@ -1,7 +1,6 @@
-import React , {useState, useEffect, useCallback} from "react";
+import React , {useState, useEffect } from "react";
 import styled from "styled-components";
-import {Link, useNavigate} from "react-router-dom";
-import loader from "../assets/loader.gif";
+import {useNavigate} from "react-router-dom";
 import {ToastContainer, toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";

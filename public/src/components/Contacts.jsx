@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import Logo from "../assets/logo.svg";
-import Logout from "../components/Logout";
 import { GoSearch } from "react-icons/go";
 
 export default function Contacts({ contacts, channels, currentUser, changeChat, changeChannel, chatORChannel }) {
