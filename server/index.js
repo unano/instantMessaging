@@ -13,6 +13,16 @@ require("dotenv").config();
 app.use(cors());
 app.use(express.json());
 
+// app.use(express.static(path.join(__dirname, "/public/build")));
+
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '/public/build', 'index.html'));
+// });
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('client/build'));
+}
+
 app.use("/api/auth", userRoutes);
 app.use("/api/channel", channelRoute);
 app.use("/api/messages", messageRoute);
@@ -27,9 +37,9 @@ mongoose.connect(process.env.MONGO_URL,{
     .catch((err) =>{
         console.log(err.message);
     });
-
-const server = app.listen(process.env.PORT,()=>{
-    console.log(`Server is running at ${process.env.PORT}`)
+const PORT = process.env.PORT || 8080;
+const server = app.listen(PORT,()=>{
+    console.log(`Server is running at ${PORT}`)
 });
 
 

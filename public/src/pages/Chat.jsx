@@ -37,18 +37,21 @@ function Chat() {
       }, []);
 
       useEffect(() => {
+        socket.current = io(host);
+      }, []);
+    
+
+      useEffect(() => {
         if (currentUser) {
-          socket.current = io(host);
           socket.current.emit("add-user", currentUser._id);
         }
       }, [currentUser]);
 
-      // useEffect(() => {
-      //   if (currentChannel) {
-      //     socket.current = io(host);
-      //     socket.current.emit("join-room", currentChannel._id);
-      //   }
-      // }, [currentChannel]);
+      useEffect(() => {
+        if (currentChannel) {
+          socket.current.emit("join-room", currentChannel._id);
+        }
+      }, [currentChannel]);
 
 
       useEffect(() => {
@@ -75,16 +78,14 @@ function Chat() {
 
       const handleChatChange = (chat) => {
         setCurrentChat(chat);
-        if(!chatorChannel){
-          socket.current = io(host);
-          socket.current.emit("add-user", currentUser._id);
-        }
+
+        
       };
 
       const handleChatChannel = (channel) => {
         setCurrentChannel(channel);
-        socket.current = io(host);
-        socket.current.emit("join-room", channel._id);
+
+        
       };
   return (
     <Container>
