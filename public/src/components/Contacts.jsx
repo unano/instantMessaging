@@ -3,8 +3,6 @@ import styled from "styled-components";
 import { GoSearch } from "react-icons/go";
 
 export default function Contacts({ contacts, channels, currentUser, changeChat, changeChannel, chatORChannel }) {
-
-
     const [currentUserName, setCurrentUserName] = useState(undefined);
     const [currentUserImage, setCurrentUserImage] = useState(undefined);
     const [currentSelected, setCurrentSelected] = useState(undefined);
@@ -52,19 +50,34 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
             </div>
             <div className="contacts">
               <div className="search">
-              <GoSearch className="serachLogo"/>
-            <input type="text" className="searchArea" onChange={(e) => setSearch(e.target.value)}></input>
-            </div>
-            {channels.map((channel, index) => {
-            return(<div 
-            className={`contact ${index === currentSelected2 && !chatOrc ? "selected" : ""}`}
-            onClick={() => changeCurrentChannel(index, channel)}>
-              <div className="public">P</div>Public Cannel {channel.channel}</div>)})};
+                <GoSearch className="serachLogo" />
+                <input
+                  type="text"
+                  className="searchArea"
+                  onChange={(e) => setSearch(e.target.value)}
+                ></input>
+              </div>
+              {channels.map((channel, index) => {
+                return (
+                  <div
+                    className={`contact ${
+                      index === currentSelected2 && !chatOrc ? "selected" : ""
+                    }`}
+                    onClick={() => changeCurrentChannel(index, channel)}
+                  >
+                    <div className="public">P</div>Public Cannel{" "}
+                    {channel.channel}
+                  </div>
+                );
+              })}
+              ;
               {selectedUser.map((contact, index) => {
                 return (
                   <div
                     key={contact._id}
-                    className={`contact ${index === currentSelected && chatOrc? "selected" : ""}`}
+                    className={`contact ${
+                      index === currentSelected && chatOrc ? "selected" : ""
+                    }`}
                     onClick={() => changeCurrentChat(index, contact)}
                   >
                     <div className="avatar">
@@ -80,7 +93,7 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
                 );
               })}
             </div>
-            
+
             <div className="current-user">
               <div className="avatar">
                 <img
