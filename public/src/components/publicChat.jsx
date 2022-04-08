@@ -49,8 +49,7 @@ export default function ChatContainer({ currentChannel, currentUser, socket}) {
     if (socket.current) {
       console.log("refreshed")
       console.log(socket.current)
-      socket.current.on("receieve-msg", (msg) => {
-        console.log("1111111111")
+      socket.current.on("recieve-msg", (msg) => {
         console.log(msg);
         setArrivalMessage({ fromSelf: false, message: msg });
       });

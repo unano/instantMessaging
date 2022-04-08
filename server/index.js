@@ -5,7 +5,7 @@ const userRoutes = require("./routes/userRoutes");
 const messageRoute = require("./routes/messagesRoute");
 const publicMessageRoute = require("./routes/publicMessagesRoute");
 const channelRoute = require("./routes/channelRoute");
-const socket = require("socket.io");
+const { Server} = require("socket.io");
 const app = express();
 
 require("dotenv").config();
@@ -33,7 +33,7 @@ const server = app.listen(process.env.PORT,()=>{
 });
 
 
-const io = socket(server,{
+const io = new Server(server,{
     cors:{
         origin:"http://localhost:3000",
         credentials: true
@@ -43,7 +43,7 @@ const io = socket(server,{
 global.onlineUsers = new Map();
 
 io.on("connection", (socket)=>{
-    // global.chatSocket = socket;
+    global.chatSocket = socket;
 
     socket.on("add-user",(userId)=>{
         onlineUsers.set(userId, socket.id);
@@ -65,7 +65,7 @@ io.on("connection", (socket)=>{
     })
     
     socket.on("send-global", (data)=>{
-            io.to(data.room).emit("recieve-msg", data.message);
+            socket.to(data.room).emit("recieve-msg", data.message);
             console.log(data)
     })
 });
