@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Logo from "../assets/logo.svg";
 import Logout from "../components/Logout";
+import { GoSearch } from "react-icons/go";
 
 export default function Contacts({ contacts, channels, currentUser, changeChat, changeChannel, chatORChannel }) {
 
@@ -10,6 +11,18 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
     const [currentUserImage, setCurrentUserImage] = useState(undefined);
     const [currentSelected, setCurrentSelected] = useState(undefined);
     const [currentSelected2, setCurrentSelected2] = useState(undefined);
+    const [chatOrc, setChatOrc] = useState(undefined);
+    const [selectedUser, setSelectedUser]= useState(contacts);
+    const [seach, setSearch]= useState("");
+
+
+    useEffect(() => {
+      const selected = contacts.filter((contact) => {
+        return contact.username.toLowerCase().indexOf(seach)!== -1;
+      }
+        );
+      setSelectedUser(selected);
+    }, [contacts, seach]);
 
     useEffect(() => {
       if(currentUser){
@@ -22,12 +35,14 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
       setCurrentSelected(index);
       changeChat(contact);
       chatORChannel(true);
+      setChatOrc(true);
     };
 
     const changeCurrentChannel = (index, contact) => {
       setCurrentSelected2(index);
       changeChannel(contact);
       chatORChannel(false);
+      setChatOrc(false);
     };
     return (
       <>
@@ -38,16 +53,20 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
               <h3>Chats</h3>
             </div>
             <div className="contacts">
+              <div className="search">
+              <GoSearch className="serachLogo"/>
+            <input type="text" className="searchArea" onChange={(e) => setSearch(e.target.value)}></input>
+            </div>
             {channels.map((channel, index) => {
             return(<div 
-            className={`contact ${index === currentSelected2 ? "selected" : ""}`}
+            className={`contact ${index === currentSelected2 && !chatOrc ? "selected" : ""}`}
             onClick={() => changeCurrentChannel(index, channel)}>
               <div className="public">P</div>Public Cannel {channel.channel}</div>)})};
-              {contacts.map((contact, index) => {
+              {selectedUser.map((contact, index) => {
                 return (
                   <div
                     key={contact._id}
-                    className={`contact ${index === currentSelected ? "selected" : ""}`}
+                    className={`contact ${index === currentSelected && chatOrc? "selected" : ""}`}
                     onClick={() => changeCurrentChat(index, contact)}
                   >
                     <div className="avatar">
@@ -96,6 +115,27 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
       h3 {
         color: black;
         font-size:30px;
+      }
+    }
+
+    .search{
+      display:flex;
+      width:90%;
+      background-color:white;
+      padding:0.5rem;
+      border-radius:3rem;
+      .searchArea{
+        font-size:1.5rem;
+        width:83%;
+        margin-left:1rem;
+        border:none;
+        &:focus {
+          outline: none;
+        }
+      }
+
+      .serachLogo{
+        font-size:2rem;
       }
     }
     .contacts {

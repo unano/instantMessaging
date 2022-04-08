@@ -43,6 +43,13 @@ function Chat() {
         }
       }, [currentUser]);
 
+      // useEffect(() => {
+      //   if (currentChannel) {
+      //     socket.current = io(host);
+      //     socket.current.emit("join-room", currentChannel._id);
+      //   }
+      // }, [currentChannel]);
+
 
       useEffect(() => {
         async function fetchData() {
@@ -68,14 +75,16 @@ function Chat() {
 
       const handleChatChange = (chat) => {
         setCurrentChat(chat);
+        if(!chatorChannel){
+          socket.current = io(host);
+          socket.current.emit("add-user", currentUser._id);
+        }
       };
 
       const handleChatChannel = (channel) => {
-        console.log("ffff")
         setCurrentChannel(channel);
         socket.current = io(host);
         socket.current.emit("join-room", channel._id);
-        console.log("ffff")
       };
   return (
     <Container>

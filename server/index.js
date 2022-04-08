@@ -62,7 +62,6 @@ io.on("connection", (socket)=>{
     })
     
     socket.on("send-global", (data)=>{
-            socket.to(data.room).emit("msg-recieve2", data.message);
-            console.log(data)
+            socket.to(data.room).emit("msg-recieve2", data);
     })
 });

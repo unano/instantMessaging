@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const PublicMessageSchema = mongoose.Schema(
   {
-      
+    name:{ type: String, required: true },
     room:{ type: Number, required: true },
     message: {
       text: { type: String, required: true },

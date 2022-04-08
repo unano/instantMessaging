@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import ChatInput from "./ChatInput";
-import { sendPublicMessageRoute, host , getAllPublicMessageRoute } from "../utils/APIRoutes";
+import { sendPublicMessageRoute, getAllPublicMessageRoute } from "../utils/APIRoutes";
 import Logout from "../components/Logout";
 // import {io} from "socket.io-client";
 
@@ -35,6 +35,7 @@ export default function ChatContainer({ currentChannel, currentUser, socket}) {
 
   const handleSendMsg = async (msg) => {
       await axios.post(sendPublicMessageRoute,{
+          name:currentUser.username,
           from:currentUser._id,
           room: currentChannel.channel,
           message:msg
@@ -43,10 +44,11 @@ export default function ChatContainer({ currentChannel, currentUser, socket}) {
         room: currentChannel._id,
         from: currentUser._id,
         message: msg,
+        name:currentUser.username
       });
 
       const msgs = [...messages];
-      msgs.push({ fromSelf: true, message: msg });
+      msgs.push({ fromSelf: true, message: msg, name:currentUser.username});
       setMessages(msgs);
   };
 
@@ -54,7 +56,8 @@ export default function ChatContainer({ currentChannel, currentUser, socket}) {
   useEffect(() => {
     if (socket.current) {
       socket.current.on("msg-recieve2", (msg) => {
-        setArrivalMessage({ fromSelf: false, message: msg });
+        console.log(msg)
+        setArrivalMessage({ fromSelf: false, message: msg.message, name:msg.name, time:msg.time});
       });
     }
   }, []);
@@ -84,7 +87,10 @@ export default function ChatContainer({ currentChannel, currentUser, socket}) {
       <div className="chat-messages">
         {messages.map((message) => {
           return (
-            <div ref={scrollRef} key={uuidv4()}>
+            <div ref={scrollRef} key={uuidv4()} className="contain">
+              <div className={`message ${message.fromSelf ? "sended3" : "recieved3"}`}>
+                <div>{message.name}</div>
+                </div>
               <div className={`message ${message.fromSelf ? "sended" : "recieved"}`}
               >
                 <div className="content">
@@ -95,7 +101,8 @@ export default function ChatContainer({ currentChannel, currentUser, socket}) {
                 {message.time? 
                 <div className={`message ${message.fromSelf ? "sended2" : "recieved2"}`}
               >
-               <div className="time">{message.time.split("-")[1]+"."+message.time.split("-")[2].slice(0,2)+" "+ message.time.split(":")[0].slice(-2) +":"+message.time.split(":")[1]}</div>
+                {/* message.time.split("-")[1]+"."+message.time.split("-")[2].slice(0,2)+" "+ */}
+               <div className="time">{ message.time.split(":")[0].slice(-2) +":"+message.time.split(":")[1]}</div>
               </div>:<></>}
               </div>
           );
@@ -152,6 +159,8 @@ const Container = styled.div`
         border-radius: 1rem;
       }
     }
+    .contain{
+      margin-bottom:14px;
     .message {
       display: flex;
       align-items: center;
@@ -192,7 +201,7 @@ const Container = styled.div`
 
     .sended2 {
       justify-content: flex-end;
-      height:20px;
+      height:12px;
       margin-top:-5px;
       padding-right:10px;
       .content {
@@ -203,12 +212,36 @@ const Container = styled.div`
     }
     .recieved2 {
       justify-content: flex-start;
-      height:20px;
+      height:12px;
       margin-top:-5px;
       padding-left:10px;
       .content {
         background-color: #9900ff20;
       }
     }
+
+    .sended3 {
+      justify-content: flex-end;
+      height:20px;
+      margin-bottom:-10px;
+      padding-right:-10px;
+      color:black;
+      .content {
+        background-color: #5ba5ff;
+        color:white;
+        display:table-row-group;
+      }
+    }
+    .recieved3 {
+      justify-content: flex-start;
+      height:20px;
+      margin-bottom:-10px;
+      padding-left:-10px;
+      color:black;
+      .content {
+        background-color: #9900ff20;
+      }
+    }
+  }
   }
 `;
