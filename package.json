@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server/index.js",
+    "start": "node server/index.js",
     "server": "nodemon backend/server.js",
     "heroku-postbuild": "cd public && npm install && npm run build"
   },
