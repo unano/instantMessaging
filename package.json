@@ -5,8 +5,7 @@
   "scripts": {
     "start": "node server/index.js",
     "server": "nodemon backend/server.js",
-    "heroku-postbuild": "npm run install-client && npm run build",
-    "install-client": "cd ../public && npm install"
+    "heroku-postbuild": "cd public && npm install && npm run build"
   },
   "repository": {
     "type": "git",

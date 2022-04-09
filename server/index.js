@@ -16,6 +16,13 @@ app.use(express.json());
 
 const __dirname1 = path.resolve();
 
+
+
+app.use("/api/auth", userRoutes);
+app.use("/api/channel", channelRoute);
+app.use("/api/messages", messageRoute);
+app.use("/api/publicMessages", publicMessageRoute);
+
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname1, "/public/build")));
   app.get("*", (req, res) => {
@@ -26,11 +33,6 @@ if (process.env.NODE_ENV === "production") {
     res.send("API is running..");
   });
 }
-
-app.use("/api/auth", userRoutes);
-app.use("/api/channel", channelRoute);
-app.use("/api/messages", messageRoute);
-app.use("/api/publicMessages", publicMessageRoute);
 
 mongoose.connect(process.env.MONGO_URL,{
          useNewUrlParser: true,
