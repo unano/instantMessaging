@@ -76,3 +76,17 @@ module.exports.getAllUsers = async (req, res, next) => {
       next(ex);
     }
   };
+
+module.exports.getUser = async (req, res, next) => {
+  try {
+    const users = await User.find({ username: req.params.name }).select([
+      "email",
+      "username",
+      "avatarImage",
+      "_id",
+    ]);
+    return res.json(users);
+  } catch (ex) {
+    next(ex);
+  }
+};
