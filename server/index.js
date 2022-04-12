@@ -38,7 +38,7 @@ mongoose.connect(process.env.MONGO_URL,{
          useNewUrlParser: true,
          useUnifiedtopology: true,
     }).then(() =>{
-        console.log("DB connection secceeed");
+        console.log("DB connection succeeed");
     })
     .catch((err) =>{
         console.log(err.message);
@@ -59,25 +59,60 @@ const io = new Server(server,{
 global.onlineUsers = new Map();
 
 io.on("connection", (socket)=>{
-    global.chatSocket = socket;
-
+    //detect the user is online
     socket.on("add-user",(userId)=>{
         onlineUsers.set(userId, socket.id);
+        console.log(`detect`);
     });
 
     socket.on("send-msg", (data) =>{
         const sendUserSocket = onlineUsers.get(data.to);
         if(sendUserSocket){
             io.to(sendUserSocket).emit("msg-recieve", data.message);
+            console.log(`User with ID: ${socket.id} say: ${data}`);
         }
     })
 
     socket.on("join-room", (data) =>{
         socket.join(data);
         console.log(`User with ID: ${socket.id} joined room: ${data}`);
+        console.log(socket.rooms); 
     })
     
     socket.on("send-global", (data)=>{
             socket.to(data.room).emit("msg-recieve2", data);
+            console.log(`global`);
     })
+
+    socket.on("timeOut", (data) => {
+        socket.disconnect(true);
+        console.log('%s because timeout', data)
+      })
+    
+      socket.on("disconnecting", (reason) => {
+        for (const room of socket.rooms) {
+          if (room !== socket.id) {
+            socket.to(room).emit("user has left", socket.id, room);
+            console.log(`user ID %f has left the room %d`,socket.id, socket.room) ;
+          }
+        }
+      })
+      socket.on('disconnect', (reason) => {
+        console.log('disconnect')
+      })
 });
+/*
+io.use((socket, next) => {
+    setTimeout(() => {
+      // next is called after the client disconnection
+      next();
+    }, 1000);
+  
+    socket.on("disconnect", () => {
+      // not triggered
+    });
+  });
+  
+  io.on("connection", (socket) => {
+    // not triggered
+  });*/

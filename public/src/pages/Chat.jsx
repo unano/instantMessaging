@@ -19,6 +19,7 @@ function Chat() {
     const [currentChannel, setCurrentChannel] = useState(undefined);
     const [isLoaded, setIsLoaded] = useState(false);
     const [chatorChannel, setchatorChannel] = useState(true);
+    const [varA, setVarA] = useState(0);
 
     useEffect (() => {
       async function fetchData() {
@@ -44,6 +45,7 @@ function Chat() {
       useEffect(() => {
         if (currentUser) {
           socket.current.emit("add-user", currentUser._id);
+          console.log("this is user %o",currentUser)
         }
       }, [currentUser]);
 
@@ -53,6 +55,42 @@ function Chat() {
         }
       }, [currentChannel]);
 
+
+//timer
+      useEffect(() => {
+        if (currentUser) {
+ //         const diff =1000 *60;
+          const timeoutObj = setTimeout(() => {
+ /*           
+            var lastTime = new Date().getTime();
+            $(document).on('mouseover', function () {
+              lastTime = new Date().getTime();
+      
+            });
+            
+            console.log(`${lastTime}ms`);
+            var delay = Date.now() - lastTime;
+            console.log(`and the now is ${Date.now()}ms`);*/
+            //if(delay > diff)
+            //{
+              socket.current.emit("timeOut", currentUser._id);
+              alert("Please Re-login!!");
+              navigate("/login");
+            //}
+            clearTimeout(timeoutObj)
+          }, 1000*30);
+
+        }
+
+      }, [currentUser]);
+
+/*
+useEffect(() => {
+  const timeout = setTimeout(() => , 6000);
+
+  return () => clearTimeout(timeout);
+
+}, [varA]);*/
 
       useEffect(() => {
         async function fetchData() {
@@ -78,8 +116,6 @@ function Chat() {
 
       const handleChatChange = (chat) => {
         setCurrentChat(chat);
-
-        
       };
 
       const handleChatChannel = (channel) => {
