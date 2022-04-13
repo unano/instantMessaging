@@ -238,13 +238,14 @@ const Container = styled.div`
     flex-direction: row;
     gap: 1rem;
     width: 85vw;
-    margin-top:-20px;
+    margin-top: -20px;
     justify-content: right;
     .current-user {
       height: 4rem;
-      width: 12rem;
+      padding-left: 2rem;
+      padding-right: 2rem;
       background-color: white;
-      border-radius: 10px;
+      border-radius: 20rem;
       overflow: hidden;
       box-shadow: 0 0 10px 2px gray;
       display: flex;

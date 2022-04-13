@@ -114,7 +114,7 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
   }
   const Container = styled.div`
     display: grid;
-    grid-template-rows: 10% 75% 15%;
+    grid-template-rows: 10% 90%;
     overflow: hidden;
     background-color: #ebe9f0;
     box-shadow: 2px 0 8px silver;
