@@ -20,22 +20,11 @@ function Chat() {
     const [currentChannel, setCurrentChannel] = useState(undefined);
     const [isLoaded, setIsLoaded] = useState(false);
     const [chatorChannel, setchatorChannel] = useState(true);
-    //const [keyLastTime, setKeyLastTime] = useState(new Date());
-
-    var keyLastTime = new Date().getTime();
-    useEffect(() => {
-      if (currentUser) {
-        keyLastTime = new Date().getTime();
-      }
-
-    }, []);
-  
+    const [keyLastTime, setKeyLastTime] = useState(new Date());
 
 
     const handleUserKeyPress = useCallback(event => {
-       keyLastTime = new Date().getTime();
-
-       console.log(`${keyLastTime}ms`)
+      setKeyLastTime(new Date());
   }, []);
 
 
@@ -82,33 +71,23 @@ function Chat() {
 
 //timer
       useEffect(() => {
-        if (currentUser) {
-          const diff =1000 * 30;
-          //const timeoutObj = setTimeout(
-            //() => 
-            //{
-            console.log(`${keyLastTime}ms`);
 
+          //5 minutes
+          const diff =1000 * 10;
+            console.log(`${keyLastTime}ms`);
             var delay = Date.now() - keyLastTime;
             console.log(`and the now is ${Date.now()}ms`);
             console.log(delay > diff);
             if(delay > diff)
             {
-              console.log("##########");
               alert("Long time no event, Please Re-login!!");
               socket.current.emit("timeOut", currentUser._id);
-
-              navigate("/login");
               localStorage.clear();
-              //clearTimeout(timeoutObj)
+              navigate("/login");
             }
 
-            //clearTimeout(timeoutObj)
-          //}, 1000);
-          
-        }
 
-      }, [Date.now()]);
+      }, [new Date()]);
 
 /*
 useEffect(() => {
