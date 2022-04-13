@@ -5,7 +5,7 @@ import axios from "axios";
 import ChatInput from "./ChatInput";
 import { sendMessageRoute, getAllMessageRoute } from "../utils/APIRoutes";
 
-export default function ChatContainer({ currentChat, currentUser, socket}) {
+export default function ChatContainer({ currentChat, currentUser, socket, setArrivalMsg}) {
   const [messages, setMessages] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const scrollRef = useRef();
@@ -29,10 +29,10 @@ export default function ChatContainer({ currentChat, currentUser, socket}) {
           to:currentChat._id,
           message:msg
       });
-      socket.current.emit("send-msg", {
-        to: currentChat._id,
-        from: currentUser._id,
-        message: msg,
+      socket.current.emit("sendMessage", {
+        receiverId: currentChat._id,
+        senderId: currentUser._id,
+        text: msg,
       });
 
       const msgs = [...messages];
@@ -42,15 +42,25 @@ export default function ChatContainer({ currentChat, currentUser, socket}) {
 
   useEffect(() => {
     if (socket.current) {
-      socket.current.on("msg-recieve", (msg) => {
-        setArrivalMessage({ fromSelf: false, message: msg });
+      socket.current.on("getMessage", (data) => {
+        console.log(currentChat._id);
+        if (currentChat) {
+          setArrivalMessage({
+            fromSelf: false,
+            sender: data.senderId,
+            message: data.text,
+          });
+        }
+        setArrivalMsg({ message: data.text, room: data.senderId});
       });
     }
   }, []);
 
   useEffect(() => {
-    arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
-  }, [arrivalMessage]);
+    arrivalMessage &&
+      currentChat._id===arrivalMessage.sender &&
+      setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage, currentChat]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -58,45 +68,55 @@ export default function ChatContainer({ currentChat, currentUser, socket}) {
 
 
   return (
-      currentChat && (
-    <Container>
-      <div className="chat-header">
-        <div className="user-details">
-          <div className="avatar">
-            <img
-              src={require(`../images/${currentChat.image}`)}
-              alt=""
-            />
-          </div>
-          <div className="username">
-            <h3>{currentChat.username}</h3>
+    currentChat && (
+      <Container>
+        <div className="chat-header">
+          <div className="user-details">
+            <div className="avatar">
+              <img src={require(`../images/${currentChat.image}`)} alt="" />
+            </div>
+            <div className="username">
+              <h3>{currentChat.username}</h3>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="chat-messages">
-        {messages.map((message) => {
-          return (
-            <div ref={scrollRef} key={uuidv4()}>
-              <div className={`message ${message.fromSelf ? "sended" : "recieved"}`}
-              >
-                <div className="content">
-                  <div>{message.message}</div>
+        <div className="chat-messages">
+          {messages.map((message) => {
+            return (
+              <div ref={scrollRef} key={uuidv4()}>
+                <div
+                  className={`message ${
+                    message.fromSelf ? "sended" : "recieved"
+                  }`}
+                >
+                  <div className="content">
+                    <div>{message.message}</div>
+                  </div>
+                  {/* <div>{message.time}</div> */}
                 </div>
-                {/* <div>{message.time}</div> */}
-                </div>
-                {message.time? 
-                <div className={`message ${message.fromSelf ? "sended2" : "recieved2"}`}
-              >
-                {/* message.time.split("-")[1]+"."+message.time.split("-")[2].slice(0,2)+" "+ */}
-               <div className="time">{message.time.split(":")[0].slice(-2) +":"+message.time.split(":")[1]}</div>
-              </div>:<></>}
+                {message.time ? (
+                  <div
+                    className={`message ${
+                      message.fromSelf ? "sended2" : "recieved2"
+                    }`}
+                  >
+                    {/* message.time.split("-")[1]+"."+message.time.split("-")[2].slice(0,2)+" "+ */}
+                    <div className="time">
+                      {message.time.split(":")[0].slice(-2) +
+                        ":" +
+                        message.time.split(":")[1]}
+                    </div>
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
-          );
-        })}
-      </div>
-      <ChatInput handleSendMsg={handleSendMsg} />
-    </Container>
-      )
+            );
+          })}
+        </div>
+        <ChatInput handleSendMsg={handleSendMsg} />
+      </Container>
+    )
   );
 }
 

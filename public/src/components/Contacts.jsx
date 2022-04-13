@@ -2,104 +2,144 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { GoSearch } from "react-icons/go";
 
-export default function Contacts({ contacts, channels, currentUser, changeChat, changeChannel, chatORChannel }) {
-    const [currentUserName, setCurrentUserName] = useState(undefined);
-    const [currentUserImage, setCurrentUserImage] = useState(undefined);
-    const [currentSelected, setCurrentSelected] = useState(undefined);
-    const [currentSelected2, setCurrentSelected2] = useState(undefined);
-    const [chatOrc, setChatOrc] = useState(undefined);
-    const [selectedUser, setSelectedUser]= useState(contacts);
-    const [seach, setSearch]= useState("");
+export default function Contacts({
+  contacts,
+  channels,
+  currentUser,
+  changeChat,
+  changeChannel,
+  chatORChannel,
+  newMsg,
+}) {
+  const [currentUserName, setCurrentUserName] = useState(undefined);
+  const [currentUserImage, setCurrentUserImage] = useState(undefined);
+  const [currentSelected, setCurrentSelected] = useState(undefined);
+  const [currentSelected2, setCurrentSelected2] = useState(undefined);
+  const [chatOrc, setChatOrc] = useState(undefined);
+  const [selectedUser, setSelectedUser] = useState(contacts);
+  const [seach, setSearch] = useState("");
+  const [flick, setFlick] = useState("");
+  const [newMessage, setNewMessage] = useState(newMsg);
 
+  useEffect(() => {
+    const selected = contacts.filter((contact) => {
+      return contact.username.toLowerCase().indexOf(seach) !== -1;
+    });
+    setSelectedUser(selected);
+  }, [contacts, seach]);
 
-    useEffect(() => {
-      const selected = contacts.filter((contact) => {
-        return contact.username.toLowerCase().indexOf(seach)!== -1;
-      }
-        );
-      setSelectedUser(selected);
-    }, [contacts, seach]);
+  useEffect(() => {
+    setNewMessage(newMsg);
+    // let specifiedElem = [];
+    // console.log(selectedUser)
+    // console.log(newMsg.room);
+    // for (var i = 0; i < selectedUser.length; i++) {
+    //   if (selectedUser[i]._id === newMsg.room) {
+    //     specifiedElem = selectedUser[i];
+    //     console.log(specifiedElem);
+    //     selectedUser.splice(i, 1);
+    //     break;
+    //   }
+    // }
+    // let arr= selectedUser.unshift(specifiedElem);
+    // console.log(arr)
+    // setNewMessage(arr)
+  }, [newMsg]);
 
-    useEffect(() => {
-      if(currentUser){
+  useEffect(() => {
+    if (currentUser) {
       setCurrentUserName(currentUser.username);
       setCurrentUserImage(currentUser.image);
-      }
-    }, [currentUser]);
-    
-    const changeCurrentChat = (index, contact) => {
-      setCurrentSelected(index);
-      changeChat(contact);
-      chatORChannel(true);
-      setChatOrc(true);
-    };
+    }
+  }, [currentUser]);
 
-    const changeCurrentChannel = (index, contact) => {
-      setCurrentSelected2(index);
-      changeChannel(contact);
-      chatORChannel(false);
-      setChatOrc(false);
-    };
-    return (
-      <>
-        {currentUserImage && currentUserName && (
-          <Container>
-            <div className="brand">
-              {/* <img src={Logo} alt="logo" /> */}
-              <h3>Chats</h3>
+  const changeCurrentChat = (index, contact) => {
+    setCurrentSelected(index);
+    setNewMessage("");
+    changeChat(contact);
+    chatORChannel(true);
+    setChatOrc(true);
+  };
+
+  const changeCurrentChannel = (index, contact) => {
+    setCurrentSelected2(index);
+    changeChannel(contact);
+    chatORChannel(false);
+    setChatOrc(false);
+  };
+
+  return (
+    <>
+      {currentUserImage && currentUserName && (
+        <Container>
+          <div className="brand">
+            {/* <img src={Logo} alt="logo" /> */}
+            <h3>Chats</h3>
+          </div>
+          <div className="contacts">
+            <div className="search">
+              <GoSearch className="serachLogo" />
+              <input
+                type="text"
+                className="searchArea"
+                onChange={(e) => setSearch(e.target.value)}
+              ></input>
             </div>
-            <div className="contacts">
-              <div className="search">
-                <GoSearch className="serachLogo" />
-                <input
-                  type="text"
-                  className="searchArea"
-                  onChange={(e) => setSearch(e.target.value)}
-                ></input>
-              </div>
-              {channels.map((channel, index) => {
-                return (
-                  <div
-                    className={`contact ${
-                      index === currentSelected2 && !chatOrc ? "selected" : ""
-                    }`}
-                    onClick={() => changeCurrentChannel(index, channel)}
-                  >
-                    <div className="public">P</div>Public Cannel{" "}
-                    {channel.channel}
+            {channels.map((channel, index) => {
+              return (
+                <div
+                  className={`contact ${
+                    index === currentSelected2 && !chatOrc ? "selected" : ""
+                  }`}
+                  onClick={() => changeCurrentChannel(index, channel)}
+                >
+                  <div className="public">P</div>Public Cannel {channel.channel}
+                </div>
+              );
+            })}
+            ;
+            {selectedUser.map((contact, index) => {
+              // console.log(onlineUsers);
+              // console.log(onlineUsers.includes(contact._id));
+              return (
+                <div
+                  key={contact._id}
+                  className={`contact ${
+                    index === currentSelected && chatOrc
+                      ? "selected"
+                      : contact._id === newMessage.room
+                      ? "flicked"
+                      : ""
+                  }`}
+                  onClick={() => changeCurrentChat(index, contact)}
+                >
+                  <div className="avatar">
+                    <img
+                      // src={`data:image/svg+xml;base64,${contact.avatarImage}`}
+                      src={
+                        contact.image
+                          ? require(`../images/${contact.image}`)
+                          : require("../images/default.png")
+                      }
+                      alt="avatar"
+                    />
                   </div>
-                );
-              })}
-              ;
-              {selectedUser.map((contact, index) => {
-                return (
-                  <div
-                    key={contact._id}
-                    className={`contact ${
-                      index === currentSelected && chatOrc ? "selected" : ""
-                    }`}
-                    onClick={() => changeCurrentChat(index, contact)}
-                  >
-                    <div className="avatar">
-                      <img
-                        // src={`data:image/svg+xml;base64,${contact.avatarImage}`}
-                        src={
-                          contact.image
-                            ? require(`../images/${contact.image}`)
-                            : require("../images/default.png")
-                        }
-                        alt="avatar"
-                      />
-                    </div>
+                  <div className="userAndMsg">
                     <div className="username">
                       <div>{contact.username}</div>
                     </div>
+                    <div className="newContent">
+                      {contact._id === newMessage.room
+                        ? newMessage.message
+                        : ""}
+                    </div>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              );
+            })}
+          </div>
 
-            {/* <div className="current-user">
+          {/* <div className="current-user">
               <div className="avatar">
                 <img src={require(`../images/${currentUserImage}`)} alt="avatar" />
               </div>
@@ -107,11 +147,11 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
                 <h2>{currentUserName}</h2>
               </div>
             </div> */}
-          </Container>
-        )}
-      </>
-    );
-  }
+        </Container>
+      )}
+    </>
+  );
+}
   const Container = styled.div`
     display: grid;
     grid-template-rows: 10% 90%;
@@ -196,9 +236,17 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
             overflow: hidden;
           }
         }
-        .username {
-          div {
-            color: black;
+        .userAndMsg {
+          display: flex;
+          flex-direction: column;
+          gap: 0.3rem;
+          .username {
+            div {
+              color: black;
+            }
+          }
+          .newContent {
+            color: gray;
           }
         }
       }
@@ -213,10 +261,44 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
           text-align: center;
           line-height: 3rem;
         }
-        .username {
-          div {
-            color: white;
+        .userAndMsg {
+          .username {
+            div {
+              color: white;
+            }
           }
+        }
+      }
+      .flicked {
+        background-color: white;
+        color: black;
+        animation: scaleout 1.5s 2 ease-in-out;
+        @keyframes scaleout {
+          0% {
+            background-color: white;
+          }
+
+          50% {
+            background-color: #94e881;
+          }
+          100% {
+            background-color: white;
+          }
+        }
+        .userAndMsg {
+          .username {
+            div {
+              color: black;
+            }
+          }
+        }
+        .public {
+          width: 3rem;
+          height: 3rem;
+          border: 0.1rem solid white;
+          border-radius: 3rem;
+          text-align: center;
+          line-height: 3rem;
         }
       }
     }

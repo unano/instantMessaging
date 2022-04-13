@@ -55,23 +55,52 @@ const io = new Server(server,{
         credentials: true
     }
 });
+let users = [];
 
-global.onlineUsers = new Map();
+const addUser = (userId, socketId) => {
+  !users.some((user) => user.userId === userId) &&
+    users.push({ userId, socketId });
+};
+
+const removeUser = (socketId) => {
+  users = users.filter((user) => user.socketId !== socketId);
+};
+
+const getUser = (userId) => {
+  return users.find((user) => user.userId === userId);
+};
 
 io.on("connection", (socket)=>{
+    console.log("a user connected");
     //detect the user is online
     socket.on("add-user",(userId)=>{
-        onlineUsers.set(userId, socket.id);
-        console.log(`detect`);
+        // onlineUsers.set(userId, socket.id);
+        // console.log(`detect`);
+        addUser(userId, socket.id);
+        io.emit("getUsers", users);
     });
 
-    socket.on("send-msg", (data) =>{
-        const sendUserSocket = onlineUsers.get(data.to);
-        if(sendUserSocket){
-            io.to(sendUserSocket).emit("msg-recieve", data.message);
-            console.log(`User with ID: ${socket.id} say: ${data}`);
-        }
-    })
+    socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+      const user = getUser(receiverId);
+      console.log(senderId)
+      if (user){
+      io.to(user.socketId).emit("getMessage", {
+        senderId,
+        text,
+      });
+    }
+    });
+
+    // socket.on("send-msg", (data) =>{
+    //     const sendUserSocket = onlineUsers.get(data.to);
+    //     if(sendUserSocket){
+    //       console.log(sendUserSocket);
+    //         io.to(sendUserSocket).emit("msg-recieve", data.message);
+    //         console.log(`User with ID: ${socket.id} say: ${data.message}`);
+    //         console.log(data.to);
+    //         console.log(data.from);
+    //     }
+    // })
 
     socket.on("join-room", (data) =>{
         socket.join(data);
@@ -84,22 +113,24 @@ io.on("connection", (socket)=>{
             console.log(`global`);
     })
 
-    socket.on("timeOut", (data) => {
-        socket.disconnect(true);
-        console.log('%s because timeout', data)
-      })
+    // socket.on("timeOut", (data) => {
+    //     socket.disconnect(true);
+    //     console.log('%s because timeout', data)
+    //   })
     
-      socket.on("disconnecting", (reason) => {
-        for (const room of socket.rooms) {
-          if (room !== socket.id) {
-            socket.to(room).emit("user has left", socket.id, room);
-            console.log(`user ID %f has left the room %d`,socket.id, socket.room) ;
-          }
-        }
-      })
-      socket.on('disconnect', (reason) => {
-        console.log('disconnect')
-      })
+    //   socket.on("disconnecting", (reason) => {
+    //     for (const room of socket.rooms) {
+    //       if (room !== socket.id) {
+    //         socket.to(room).emit("user has left", socket.id, room);
+    //         console.log(`user ID %f has left the room %d`,socket.id, socket.room) ;
+    //       }
+    //     }
+    //   })
+    socket.on("disconnect", () => {
+      console.log("a user disconnected!");
+      removeUser(socket.id);
+      io.emit("getUsers", users);
+    });
 });
 /*
 io.use((socket, next) => {

@@ -20,31 +20,33 @@ function Chat() {
     const [currentChannel, setCurrentChannel] = useState(undefined);
     const [isLoaded, setIsLoaded] = useState(false);
     const [chatorChannel, setchatorChannel] = useState(true);
+    const [newMsg, setNewMsg] = useState("");
+    // const [onlineUsers, setOnlineUsers] = useState("");
     //const [keyLastTime, setKeyLastTime] = useState(new Date());
+    // const socket = useRef(io(host)); 
+  //   var keyLastTime = new Date().getTime();
+  //   useEffect(() => {
+  //     if (currentUser) {
+  //       keyLastTime = new Date().getTime();
+  //     }
 
-    var keyLastTime = new Date().getTime();
-    useEffect(() => {
-      if (currentUser) {
-        keyLastTime = new Date().getTime();
-      }
-
-    }, []);
+  //   }, []);
   
 
 
-    const handleUserKeyPress = useCallback(event => {
-       keyLastTime = new Date().getTime();
+  //   const handleUserKeyPress = useCallback(event => {
+  //      keyLastTime = new Date().getTime();
 
-       console.log(`${keyLastTime}ms`)
-  }, []);
+  //      console.log(`${keyLastTime}ms`)
+  // }, []);
 
 
-    useEffect(() => {
-      window.addEventListener('keydown', handleUserKeyPress);
-      return () => {
-        window.removeEventListener("keydown", handleUserKeyPress);
-    };
-    }, [handleUserKeyPress]);
+    // useEffect(() => {
+    //   window.addEventListener('keydown', handleUserKeyPress);
+    //   return () => {
+    //     window.removeEventListener("keydown", handleUserKeyPress);
+    // };
+    // }, [handleUserKeyPress]);
 
     useEffect (() => {
       async function fetchData() {
@@ -70,6 +72,12 @@ function Chat() {
       useEffect(() => {
         if (currentUser) {
           socket.current.emit("add-user", currentUser._id);
+          socket.current.on("getUsers", users=>{
+            // setOnlineUsers(
+            //   contacts.filter((f) => users.some((u) => u.userId === f._id))
+            // );
+            console.log(users)
+          });
         }
       }, [currentUser]);
 
@@ -80,35 +88,35 @@ function Chat() {
       }, [currentChannel]);
 
 
-//timer
-      useEffect(() => {
-        if (currentUser) {
-          const diff =1000 * 30;
-          //const timeoutObj = setTimeout(
-            //() => 
-            //{
-            console.log(`${keyLastTime}ms`);
+// //timer
+//       useEffect(() => {
+//         if (currentUser) {
+//           const diff =1000 * 30;
+//           //const timeoutObj = setTimeout(
+//             //() => 
+//             //{
+//             console.log(`${keyLastTime}ms`);
 
-            var delay = Date.now() - keyLastTime;
-            console.log(`and the now is ${Date.now()}ms`);
-            console.log(delay > diff);
-            if(delay > diff)
-            {
-              console.log("##########");
-              alert("Long time no event, Please Re-login!!");
-              socket.current.emit("timeOut", currentUser._id);
+//             var delay = Date.now() - keyLastTime;
+//             console.log(`and the now is ${Date.now()}ms`);
+//             console.log(delay > diff);
+//             if(delay > diff)
+//             {
+//               console.log("##########");
+//               alert("Long time no event, Please Re-login!!");
+//               socket.current.emit("timeOut", currentUser._id);
 
-              navigate("/login");
-              localStorage.clear();
-              //clearTimeout(timeoutObj)
-            }
+//               navigate("/login");
+//               localStorage.clear();
+//               //clearTimeout(timeoutObj)
+//             }
 
-            //clearTimeout(timeoutObj)
-          //}, 1000);
+//             //clearTimeout(timeoutObj)
+//           //}, 1000);
           
-        }
+//         }
 
-      }, [Date.now()]);
+//       }, [Date.now()]);
 
 /*
 useEffect(() => {
@@ -144,9 +152,11 @@ useEffect(() => {
 
       const handleChatChannel = (channel) => {
         setCurrentChannel(channel);
-
-        
       };
+
+      const handleNewMsg = (msg) =>{
+        setNewMsg(msg)
+      }
   return (
     <Container>
       <div className="head">
@@ -176,6 +186,7 @@ useEffect(() => {
           changeChat={handleChatChange}
           changeChannel={handleChatChannel}
           chatORChannel={setchatorChannel}
+          newMsg={newMsg}
         />
         {
           isLoaded && (currentChat || currentChannel) === undefined ? (
@@ -187,6 +198,7 @@ useEffect(() => {
                   currentChat={currentChat}
                   currentUser={currentUser}
                   socket={socket}
+                  setArrivalMsg={handleNewMsg}
                 />
               ) : (
                 <PublicChat
@@ -242,8 +254,8 @@ const Container = styled.div`
     justify-content: right;
     .current-user {
       height: 4rem;
-      padding-left: 2rem;
-      padding-right: 2rem;
+      padding-left: 0.8rem;
+      padding-right: 1rem;
       background-color: white;
       border-radius: 20rem;
       overflow: hidden;
