@@ -20,25 +20,13 @@ function Chat() {
     const [currentChannel, setCurrentChannel] = useState(undefined);
     const [isLoaded, setIsLoaded] = useState(false);
     const [chatorChannel, setchatorChannel] = useState(true);
+    const [keyLastTime, setKeyLastTime] = useState(new Date());
     const [newMsg, setNewMsg] = useState("");
-    // const [onlineUsers, setOnlineUsers] = useState("");
-    //const [keyLastTime, setKeyLastTime] = useState(new Date());
-    // const socket = useRef(io(host)); 
-  //   var keyLastTime = new Date().getTime();
-  //   useEffect(() => {
-  //     if (currentUser) {
-  //       keyLastTime = new Date().getTime();
-  //     }
-
-  //   }, []);
-  
 
 
-  //   const handleUserKeyPress = useCallback(event => {
-  //      keyLastTime = new Date().getTime();
-
-  //      console.log(`${keyLastTime}ms`)
-  // }, []);
+    const handleUserKeyPress = useCallback(event => {
+      setKeyLastTime(new Date());
+  }, []);
 
 
     // useEffect(() => {
@@ -88,35 +76,25 @@ function Chat() {
       }, [currentChannel]);
 
 
-// //timer
-//       useEffect(() => {
-//         if (currentUser) {
-//           const diff =1000 * 30;
-//           //const timeoutObj = setTimeout(
-//             //() => 
-//             //{
-//             console.log(`${keyLastTime}ms`);
+//timer
+      useEffect(() => {
 
-//             var delay = Date.now() - keyLastTime;
-//             console.log(`and the now is ${Date.now()}ms`);
-//             console.log(delay > diff);
-//             if(delay > diff)
-//             {
-//               console.log("##########");
-//               alert("Long time no event, Please Re-login!!");
-//               socket.current.emit("timeOut", currentUser._id);
+          //5 minutes
+          const diff =1000 * 1000;
+            console.log(`${keyLastTime}ms`);
+            var delay = Date.now() - keyLastTime;
+            console.log(`and the now is ${Date.now()}ms`);
+            console.log(delay > diff);
+            if(delay > diff)
+            {
+              alert("Long time no event, Please Re-login!!");
+              socket.current.emit("timeOut", currentUser._id);
+              localStorage.clear();
+              navigate("/login");
+            }
 
-//               navigate("/login");
-//               localStorage.clear();
-//               //clearTimeout(timeoutObj)
-//             }
 
-//             //clearTimeout(timeoutObj)
-//           //}, 1000);
-          
-//         }
-
-//       }, [Date.now()]);
+      }, [new Date()]);
 
 /*
 useEffect(() => {

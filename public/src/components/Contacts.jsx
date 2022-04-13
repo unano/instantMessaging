@@ -107,7 +107,7 @@ export default function Contacts({
                   className={`contact ${
                     index === currentSelected && chatOrc
                       ? "selected"
-                      : contact._id === newMessage.room
+                      : contact._id === newMessage.room && chatOrc
                       ? "flicked"
                       : ""
                   }`}
