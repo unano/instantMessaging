@@ -24,9 +24,8 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    avatarImage:{
-        type: String,
-        default:""
+    image:{
+        type:String
     }
 });
 

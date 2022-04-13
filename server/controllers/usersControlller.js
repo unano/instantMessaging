@@ -15,9 +15,11 @@ module.exports.register = async (req, res, next) =>{
         const hashedPasword = await bcrypt.hash(password, 10);
 
         const user = await User.create({
-            email,
-            username,
-            password:hashedPasword,
+          email,
+          username,
+          password: hashedPasword,
+          image: req.file.originalname,
+          isAvatarImageSet: true,
         }); 
         delete user.password;
         return res.json({status:true, user})
@@ -68,7 +70,7 @@ module.exports.getAllUsers = async (req, res, next) => {
       const users = await User.find({ _id: { $ne: req.params.id } }).select([
         "email",
         "username",
-        "avatarImage",
+        "image",
         "_id",
       ]);
       return res.json(users);
@@ -82,7 +84,7 @@ module.exports.getUser = async (req, res, next) => {
     const users = await User.find({ username: req.params.name }).select([
       "email",
       "username",
-      "avatarImage",
+      'image',
       "_id",
     ]);
     return res.json(users);

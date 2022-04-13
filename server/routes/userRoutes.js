@@ -1,10 +1,27 @@
-const { register, login, setAvatar, getAllUsers, getUser } = require("../controllers/usersControlller");
+const {
+  register,
+  login,
+  getAllUsers,
+  getUser,
+} = require("../controllers/usersControlller");
+
+const multer = require("multer");
+const storage = multer.diskStorage({
+    destination:(req, file, callback) =>{
+        callback(null,"./public/src/images")
+    },
+    filename:(req, file, callback) =>{
+        callback(null, file.originalname);
+        // Date.now() + 
+    }
+})
+
+const upload = multer({storage:storage});
 
 const router = require("express").Router();
 
-router.post("/register", register);
+router.post("/register", upload.single("image") , register);
 router.post("/login", login);
-router.post("/setAvatar/:id" , setAvatar);
 router.get("/allusers/:id", getAllUsers);
 router.get("/user/:name", getUser);
 

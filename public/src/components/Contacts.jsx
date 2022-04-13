@@ -23,7 +23,7 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
     useEffect(() => {
       if(currentUser){
       setCurrentUserName(currentUser.username);
-      setCurrentUserImage(currentUser.avatarImage);
+      setCurrentUserImage(currentUser.image);
       }
     }, [currentUser]);
     
@@ -82,7 +82,12 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
                   >
                     <div className="avatar">
                       <img
-                        src={`data:image/svg+xml;base64,${contact.avatarImage}`}
+                        // src={`data:image/svg+xml;base64,${contact.avatarImage}`}
+                        src={
+                          contact.image
+                            ? require(`../images/${contact.image}`)
+                            : require("../images/default.png")
+                        }
                         alt="avatar"
                       />
                     </div>
@@ -96,10 +101,7 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
 
             <div className="current-user">
               <div className="avatar">
-                <img
-                  src={`data:image/svg+xml;base64,${currentUserImage}`}
-                  alt="avatar"
-                />
+                <img src={require(`../images/${currentUserImage}`)} alt="avatar" />
               </div>
               <div className="username">
                 <h2>{currentUserName}</h2>
@@ -116,7 +118,7 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
     overflow: hidden;
     background-color: #ebe9f0;
     box-shadow: 2px 0 8px silver;
-    z-index:5;
+    z-index: 5;
     .brand {
       display: flex;
       align-items: center;
@@ -127,35 +129,35 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
       }
       h3 {
         color: black;
-        font-size:30px;
+        font-size: 30px;
       }
     }
 
-    .search{
-      display:flex;
-      width:90%;
-      background-color:white;
-      padding:0.5rem;
-      border-radius:3rem;
-      .searchArea{
-        font-size:1.5rem;
-        width:83%;
-        margin-left:1rem;
-        border:none;
+    .search {
+      display: flex;
+      width: 90%;
+      background-color: white;
+      padding: 0.5rem;
+      border-radius: 3rem;
+      .searchArea {
+        font-size: 1.5rem;
+        width: 83%;
+        margin-left: 1rem;
+        border: none;
         &:focus {
           outline: none;
         }
       }
 
-      .serachLogo{
-        font-size:2rem;
+      .serachLogo {
+        font-size: 2rem;
       }
     }
     .contacts {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-top:8px;
+      padding-top: 8px;
       overflow: auto;
       gap: 0.8rem;
       &::-webkit-scrollbar {
@@ -167,7 +169,7 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
         }
       }
       .contact {
-        color:black;
+        color: black;
         background-color: white;
         box-shadow: 0 0 6px #e2e2e2;
         min-height: 5rem;
@@ -179,17 +181,19 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
         gap: 1rem;
         align-items: center;
         transition: 0.5s ease-in-out;
-        .public{
-          width:3rem;
+        .public {
+          width: 3rem;
           height: 3rem;
           border: 0.1rem solid black;
           border-radius: 3rem;
           text-align: center;
-          line-height:3rem;
+          line-height: 3rem;
         }
         .avatar {
           img {
             height: 3rem;
+            border-radius: 3rem;
+            overflow: hidden;
           }
         }
         .username {
@@ -200,14 +204,14 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
       }
       .selected {
         background-color: #211b42;
-        color:white;
-        .public{
-          width:3rem;
+        color: white;
+        .public {
+          width: 3rem;
           height: 3rem;
           border: 0.1rem solid white;
           border-radius: 3rem;
           text-align: center;
-          line-height:3rem;
+          line-height: 3rem;
         }
         .username {
           div {
@@ -227,6 +231,7 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
         img {
           height: 4rem;
           max-inline-size: 100%;
+          border-radius: 8rem;
         }
       }
       .username {

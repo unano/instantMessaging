@@ -45,7 +45,6 @@ function Chat() {
       useEffect(() => {
         if (currentUser) {
           socket.current.emit("add-user", currentUser._id);
-          console.log("this is user %o",currentUser)
         }
       }, [currentUser]);
 
@@ -78,7 +77,7 @@ function Chat() {
               navigate("/login");
             //}
             clearTimeout(timeoutObj)
-          }, 1000*30);
+          }, 1000*3000);
 
         }
 
@@ -98,9 +97,7 @@ useEffect(() => {
           if (currentUser.isAvatarImageSet) {
             const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
             setContacts(data.data);
-          } else {
-            navigate("/setAvatar");
-          }
+          } 
         }
         }
         fetchData();
