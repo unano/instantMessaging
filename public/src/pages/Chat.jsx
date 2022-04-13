@@ -1,4 +1,4 @@
-import React , {useState, useEffect, useRef} from "react";
+import React , {useState, useEffect, useRef,useCallback} from "react";
 import styled from "styled-components";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
@@ -19,7 +19,31 @@ function Chat() {
     const [currentChannel, setCurrentChannel] = useState(undefined);
     const [isLoaded, setIsLoaded] = useState(false);
     const [chatorChannel, setchatorChannel] = useState(true);
-    const [varA, setVarA] = useState(0);
+    //const [keyLastTime, setKeyLastTime] = useState(new Date());
+
+    var keyLastTime = new Date().getTime();
+    useEffect(() => {
+      if (currentUser) {
+        keyLastTime = new Date().getTime();
+      }
+
+    }, []);
+  
+
+
+    const handleUserKeyPress = useCallback(event => {
+       keyLastTime = new Date().getTime();
+
+       console.log(`${keyLastTime}ms`)
+  }, []);
+
+
+    useEffect(() => {
+      window.addEventListener('keydown', handleUserKeyPress);
+      return () => {
+        window.removeEventListener("keydown", handleUserKeyPress);
+    };
+    }, [handleUserKeyPress]);
 
     useEffect (() => {
       async function fetchData() {
@@ -58,30 +82,32 @@ function Chat() {
 //timer
       useEffect(() => {
         if (currentUser) {
- //         const diff =1000 *60;
-          const timeoutObj = setTimeout(() => {
- /*           
-            var lastTime = new Date().getTime();
-            $(document).on('mouseover', function () {
-              lastTime = new Date().getTime();
-      
-            });
-            
-            console.log(`${lastTime}ms`);
-            var delay = Date.now() - lastTime;
-            console.log(`and the now is ${Date.now()}ms`);*/
-            //if(delay > diff)
+          const diff =1000 * 30;
+          //const timeoutObj = setTimeout(
+            //() => 
             //{
-              socket.current.emit("timeOut", currentUser._id);
-              alert("Please Re-login!!");
-              navigate("/login");
-            //}
-            clearTimeout(timeoutObj)
-          }, 1000*3000);
+            console.log(`${keyLastTime}ms`);
 
+            var delay = Date.now() - keyLastTime;
+            console.log(`and the now is ${Date.now()}ms`);
+            console.log(delay > diff);
+            if(delay > diff)
+            {
+              console.log("##########");
+              alert("Long time no event, Please Re-login!!");
+              socket.current.emit("timeOut", currentUser._id);
+
+              navigate("/login");
+              localStorage.clear();
+              //clearTimeout(timeoutObj)
+            }
+
+            //clearTimeout(timeoutObj)
+          //}, 1000);
+          
         }
 
-      }, [currentUser]);
+      }, [Date.now()]);
 
 /*
 useEffect(() => {
