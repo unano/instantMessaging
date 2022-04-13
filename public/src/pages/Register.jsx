@@ -208,6 +208,13 @@ height: 100vh;
       border: 0.1rem solid black;
       outline: none;
     }
+    ::file-selector-button {
+      border: 2px solid gray;
+      padding: .2em .4em;
+      border-radius: 10rem;
+      background-color: transparent;
+      transition: 1s;
+}
   }
   button {
     background-color: white;
