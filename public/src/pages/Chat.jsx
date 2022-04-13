@@ -8,6 +8,7 @@ import Welcome from "../components/Welcome";
 import ChatContainer from "../components/ChatContainer";
 import PublicChat from "../components/publicChat";
 import {io} from "socket.io-client";
+import Logout from "../components/Logout";
 
 function Chat() {
     const socket = useRef();
@@ -148,24 +149,62 @@ useEffect(() => {
       };
   return (
     <Container>
-        <div className="container">
-        <Contacts contacts={contacts} channels={channels} currentUser={currentUser} changeChat={handleChatChange} changeChannel={handleChatChannel} chatORChannel={setchatorChannel}/>
-        {
-            isLoaded && (currentChat || currentChannel)=== undefined? (
-                <Welcome currentUser={currentUser}/>
+      <div className="head">
+        <div className="current-user">
+          <div className="avatar">
+            {currentUser ? (
+              <img
+                src={require(`../images/${currentUser.image}`)}
+                alt="avatar"
+              />
+            ) : (
+              <></>
+            )}
+          </div>
 
-            ):(<>{chatorChannel?<ChatContainer currentChat={currentChat} currentUser={currentUser} socket={socket}/> :
-            <PublicChat currentChannel={currentChannel} currentUser={currentUser} socket={socket}/>}</>
-            )
+          <div className="username">
+            <h2>{currentUser ? currentUser.username : ""}</h2>
+          </div>
+        </div>
+        <Logout />
+      </div>
+      <div className="container">
+        <Contacts
+          contacts={contacts}
+          channels={channels}
+          currentUser={currentUser}
+          changeChat={handleChatChange}
+          changeChannel={handleChatChannel}
+          chatORChannel={setchatorChannel}
+        />
+        {
+          isLoaded && (currentChat || currentChannel) === undefined ? (
+            <Welcome currentUser={currentUser} />
+          ) : (
+            <>
+              {chatorChannel ? (
+                <ChatContainer
+                  currentChat={currentChat}
+                  currentUser={currentUser}
+                  socket={socket}
+                />
+              ) : (
+                <PublicChat
+                  currentChannel={currentChannel}
+                  currentUser={currentUser}
+                  socket={socket}
+                />
+              )}
+            </>
+          )
 
           //   isLoaded && (currentChat || currentChannel) === undefined? (
           //     <Welcome currentUser={currentUser}/>
 
-          // ):(<ChatContainer currentChat={currentChat} currentUser={currentUser} socket={socket}/> 
+          // ):(<ChatContainer currentChat={currentChat} currentUser={currentUser} socket={socket}/>
           // )
-
         }
-        </div>
+      </div>
     </Container>
   );
 }
@@ -186,12 +225,44 @@ const Container = styled.div`
     width: 85vw;
     background-color: white;
     border-radius: 10px;
-    overflow:hidden;
+    overflow: hidden;
     box-shadow: 0 0 10px 2px gray;
     display: grid;
     grid-template-columns: 25% 75%;
     @media screen and (min-width: 720px) and (max-width: 1080px) {
       grid-template-columns: 35% 65%;
+    }
+  }
+  .head {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    width: 85vw;
+    margin-top:-20px;
+    justify-content: right;
+    .current-user {
+      height: 4rem;
+      width: 12rem;
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px 2px gray;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      .avatar {
+        img {
+          height: 3rem;
+          max-inline-size: 100%;
+          border-radius: 8rem;
+        }
+      }
+      .username {
+        h2 {
+          color: black;
+        }
+      }
     }
   }
 `;

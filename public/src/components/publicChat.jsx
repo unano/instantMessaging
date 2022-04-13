@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import ChatInput from "./ChatInput";
 import { sendPublicMessageRoute, getAllPublicMessageRoute } from "../utils/APIRoutes";
-import Logout from "../components/Logout";
 // import {io} from "socket.io-client";
 
 export default function ChatContainer({ currentChannel, currentUser, socket}) {
@@ -82,7 +81,6 @@ export default function ChatContainer({ currentChannel, currentUser, socket}) {
             <h3>Public Channel {currentChannel.channel}</h3>
           </div>
         </div>
-        <Logout />
       </div>
       <div className="chat-messages">
         {messages.map((message) => {

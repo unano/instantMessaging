@@ -99,14 +99,14 @@ export default function Contacts({ contacts, channels, currentUser, changeChat, 
               })}
             </div>
 
-            <div className="current-user">
+            {/* <div className="current-user">
               <div className="avatar">
                 <img src={require(`../images/${currentUserImage}`)} alt="avatar" />
               </div>
               <div className="username">
                 <h2>{currentUserName}</h2>
               </div>
-            </div>
+            </div> */}
           </Container>
         )}
       </>
