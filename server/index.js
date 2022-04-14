@@ -50,6 +50,8 @@ const server = app.listen(PORT,()=>{
 
 
 const io = new Server(server,{
+    pingTimeout: 30000,
+    pingInterval: 55000,
     cors:{
         origin:"http://localhost:3000",
         credentials: true
@@ -113,10 +115,10 @@ io.on("connection", (socket)=>{
             console.log(`global`);
     })
 
-    // socket.on("timeOut", (data) => {
-    //     socket.disconnect(true);
-    //     console.log('%s because timeout', data)
-    //   })
+     socket.on("timeOut", (data) => {
+         socket.disconnect(true);
+         console.log('%s because timeout', data)
+       })
     
     //   socket.on("disconnecting", (reason) => {
     //     for (const room of socket.rooms) {
